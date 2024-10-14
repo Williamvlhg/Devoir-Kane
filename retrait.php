@@ -1,5 +1,8 @@
 <?php
+
 include 'db.php';
+
+
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $compteID = $_SESSION['client_id'];
@@ -7,9 +10,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $typeDeCompte = $_POST['typeDeCompte'];
 
     if (!empty($compteID) && $montant > 0) {
-        $stmt = $pdo->prepare("SELECT * FROM comptebancaire WHERE clientId = :clientId"); 
-        $stmt->execute(['clientId' => $compteID]);  
-        $compte = $stmt->fetch(); 
+        $stmt = $pdo->prepare("SELECT * FROM comptebancaire WHERE clientId = :clientId AND typeDeCompte = :typeDeCompte");
+        $stmt->execute(['clientId' => $compteID, 'typeDeCompte' => $typeDeCompte]);
+        $compte = $stmt->fetch();
 
         if ($compte) {
             if ($compte['solde'] >= $montant) {
@@ -45,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <main class="container mt-5">
         <form action="retrait.php" method="POST">
             <div class="form-group">
-            <label for="typeDeCompte">Sélectionnez le type de compte</label>
+                <label for="typeDeCompte">Sélectionnez le type de compte</label>
                 <select id="typeDeCompte" name="typeDeCompte" class="form-control" required>
                     <option value="">--Choisissez un type de compte--</option>
                     <option value="courant">Courant</option>

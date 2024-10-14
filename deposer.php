@@ -1,5 +1,11 @@
 <?php
+session_start();
 include 'db.php';
+
+if (!isset($_SESSION['client_id'])) {
+    header('Location: connexion.php');
+    exit();
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $compteID = $_SESSION['client_id'];
@@ -7,9 +13,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $typeDeCompte = $_POST['typeDeCompte'];
 
     if (!empty($compteID) && $montant > 0) {
-        $stmt = $pdo->prepare("SELECT * FROM comptebancaire WHERE clientId = :clientId"); 
-        $stmt->execute(['clientId' => $compteID]);  
-        $compte = $stmt->fetch(); 
+        $stmt = $pdo->prepare("SELECT * FROM comptebancaire WHERE clientId = :clientId AND typeDeCompte = :typeDeCompte");
+        $stmt->execute(['clientId' => $compteID, 'typeDeCompte' => $typeDeCompte]);
+        $compte = $stmt->fetch();
 
         if ($compte) {
             $nouveau_solde = $compte['solde'] + $montant;
@@ -41,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <main class="container mt-5">
         <form action="deposer.php" method="POST">
             <div class="form-group">
-            <label for="typeDeCompte">Sélectionnez le type de compte</label>
+                <label for="typeDeCompte">Sélectionnez le type de compte</label>
                 <select id="typeDeCompte" name="typeDeCompte" class="form-control" required>
                     <option value="">--Choisissez un type de compte--</option>
                     <option value="courant">Courant</option>

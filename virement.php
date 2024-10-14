@@ -8,6 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $montant = (float)$_POST['montant'];
 
     if (!empty($prenom_source) && !empty($prenom_dest) && $montant > 0) {
+
         $stmt_source = $pdo->prepare("SELECT * FROM comptebancaire INNER JOIN client ON comptebancaire.clientId = client.clientId WHERE client.prenom = :prenom");
         $stmt_dest = $pdo->prepare("SELECT * FROM comptebancaire INNER JOIN client ON comptebancaire.clientId = client.clientId WHERE client.prenom = :prenom");
 
