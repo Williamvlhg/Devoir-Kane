@@ -61,14 +61,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <script>
         function validerFormulaire() {
             const mdp = document.getElementById('mdp').value;
-
-            // Vérifier si le mot de passe contient des espaces
             if (/\s/.test(mdp)) {
                 alert("Le mot de passe ne doit pas contenir d'espaces.");
                 return false;
             }
 
-            return true; // Le formulaire peut être soumis
+            return true;
         }
     </script>
 </head>
@@ -77,7 +75,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <h1>Inscription</h1>
     </header>
     <main class="container mt-5">
-        <!-- On ajoute onsubmit="return validerFormulaire()" -->
         <form method="POST" action="inscription.php" onsubmit="return validerFormulaire()">
             <div class="form-group">
                 <label for="nom">Nom</label>
