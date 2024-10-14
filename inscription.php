@@ -1,12 +1,28 @@
 <?php
-include 'db.php';
+$host = 'localhost';
+$dbname = 'Banque';
+$username = 'root';  
+$password = '';      
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
+
+session_start();
+
+if (isset($_SESSION['client_id'])) {
+    header('Location: index.php');
+    exit();
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nom = htmlspecialchars($_POST['nom']);
     $prenom = htmlspecialchars($_POST['prenom']);
     $telephone = htmlspecialchars($_POST['telephone']);
     $email = htmlspecialchars($_POST['email']);
-    //$mdp = password_hash($_POST['mdp'], PASSWORD_BCRYPT); // Hachage du mot de passe
     $mdp = $_POST['mdp']; // Mot de passe non-haché pour l'instant (devra être haché lors de l'inscription)
 
 
@@ -42,13 +58,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <title>Inscription</title>
+    <script>
+        function validerFormulaire() {
+            const mdp = document.getElementById('mdp').value;
+
+            // Vérifier si le mot de passe contient des espaces
+            if (/\s/.test(mdp)) {
+                alert("Le mot de passe ne doit pas contenir d'espaces.");
+                return false;
+            }
+
+            return true; // Le formulaire peut être soumis
+        }
+    </script>
 </head>
 <body>
     <header class="bg-secondary p-4 text-center">
         <h1>Inscription</h1>
     </header>
     <main class="container mt-5">
-        <form method="POST" action="inscription.php">
+        <!-- On ajoute onsubmit="return validerFormulaire()" -->
+        <form method="POST" action="inscription.php" onsubmit="return validerFormulaire()">
             <div class="form-group">
                 <label for="nom">Nom</label>
                 <input type="text" class="form-control" id="nom" name="nom" placeholder="Nom" required>

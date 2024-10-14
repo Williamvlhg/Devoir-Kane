@@ -1,5 +1,22 @@
 <?php
-include 'db.php';
+$host = 'localhost';
+$dbname = 'Banque';
+$username = 'root';  
+$password = '';      
+
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Erreur de connexion : " . $e->getMessage());
+}
+
+session_start();
+
+if (isset($_SESSION['client_id'])) {
+    header('Location: index.php');
+    exit();
+}
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = htmlspecialchars($_POST['email']);
